@@ -1,0 +1,17 @@
+[build]
+  command = "npm run build"
+  publish = "dist/client"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# NOTE: This is a TanStack Start (SSR) app, not a plain client-side SPA.
+# Routing, server functions, and the 404/not-found boundary are handled by
+# the TanStack Start server, which the @netlify/vite-plugin-tanstack-start
+# plugin (see vite.config.ts) automatically deploys as Netlify Functions.
+#
+# Do NOT add a blanket `/* -> /index.html 200` redirect (the classic SPA
+# fix) here or in public/_redirects. That would bypass the SSR function
+# entirely and serve a static, unhydrated shell for every route instead of
+# letting TanStack Start render and route the request, which would reintroduce
+# broken/blank pages rather than fix them.
