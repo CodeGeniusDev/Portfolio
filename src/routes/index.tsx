@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { useHydrated } from "@/hooks/useHydrated";
 import { useLenis } from "@/hooks/useLenis";
 import { Loader } from "@/components/loader/Loader";
 import { CustomCursor } from "@/components/cursor/CustomCursor";
@@ -21,13 +20,12 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const hydrated = useHydrated();
   const [loaded, setLoaded] = useState(false);
   useLenis();
 
   return (
     <div className="relative bg-[#050505] text-white overflow-x-clip">
-      {hydrated && !loaded && <Loader onDone={() => setLoaded(true)} />}
+      {!loaded && <Loader onDone={() => setLoaded(true)} />}
       <CustomCursor />
       <ScrollProgress />
       <Hud />
