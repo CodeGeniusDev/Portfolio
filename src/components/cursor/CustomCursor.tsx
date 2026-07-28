@@ -16,7 +16,10 @@ export function CustomCursor() {
     const rx = gsap.quickTo(ring, "x", { duration: 0.4, ease: "power3.out" });
     const ry = gsap.quickTo(ring, "y", { duration: 0.4, ease: "power3.out" });
     const move = (e: MouseEvent) => {
-      dx(e.clientX); dy(e.clientY); rx(e.clientX); ry(e.clientY);
+      dx(e.clientX);
+      dy(e.clientY);
+      rx(e.clientX);
+      ry(e.clientY);
     };
     const over = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
@@ -42,8 +45,8 @@ export function CustomCursor() {
         style={{
           width: hover ? 56 : 28,
           height: hover ? 56 : 28,
-          background: hover ? "rgba(198,242,78,0.15)" : "transparent",
-          borderColor: hover ? "#c6f24e" : "rgba(255,255,255,0.35)",
+          background: hover ? "rgb(155, 194, 45, 0.15)" : "transparent",
+          borderColor: hover ? "var(--primary)" : "rgba(255,255,255,0.35)",
           mixBlendMode: "difference",
         }}
       />

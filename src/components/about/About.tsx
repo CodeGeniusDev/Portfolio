@@ -12,13 +12,13 @@ export function About() {
   return (
     <section
       id="about"
-      className="relative py-32 px-6 md:px-12"
+      className="relative py-20 md:py-32 px-4 md:px-6 lg:px-12"
       aria-label="About"
     >
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 items-center">
         <div
           ref={imgRef}
-          className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10"
+          className="relative aspect-4/5 md:aspect-3/4 overflow-hidden rounded-2xl border border-white/10 order-2 md:order-1"
         >
           <img
             src={portrait}
@@ -26,24 +26,24 @@ export function About() {
             loading="lazy"
             className="w-full h-full object-cover grayscale"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
         </div>
-        <div ref={textRef}>
-          <p data-reveal className="mono-label mb-6">
+        <div ref={textRef} className="order-1 md:order-2">
+          <p data-reveal className="mono-label mb-4 md:mb-6">
             / 01 &mdash; About
           </p>
           <h2
             data-reveal
-            className="font-display font-black leading-[0.95] tracking-tight text-5xl md:text-7xl mb-8"
+            className="font-display font-black leading-[0.95] tracking-tight text-4xl md:text-5xl lg:text-7xl mb-6 md:mb-8"
           >
-            Engineer <span className="text-accent-lime">building</span> quiet,
+            Engineer <span className="text-primary">building</span> quiet,
             precise interfaces.
           </h2>
           {profile.bio.map((p, i) => (
             <p
               key={i}
               data-reveal
-              className="text-white/70 text-lg leading-relaxed mb-4"
+              className="text-white/70 text-base md:text-lg leading-relaxed mb-4"
             >
               {p}
             </p>

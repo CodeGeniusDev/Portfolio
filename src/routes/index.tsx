@@ -12,7 +12,10 @@ import { Experience } from "@/components/experience/Experience";
 import { Skills } from "@/components/skills/Skills";
 import { Projects } from "@/components/projects/Projects";
 import { Achievements } from "@/components/achievements/Achievements";
-import { Contact } from "@/components/contact/Contact";
+// import { Contact } from "@/components/contact/Contact";
+import { LetsBuild } from "@/components/cta/PremiumCTA";
+import { Showcase } from "@/components/showcase/Showcase";
+import { Signature } from "@/components/signature/Signature";
 import { Footer } from "@/components/footer/Footer";
 
 export const Route = createFileRoute("/")({
@@ -32,12 +35,15 @@ function Index() {
       <Dock />
       <main>
         <Hero />
+        <Showcase />
         <About />
         <Experience />
         <Skills />
         <Projects />
         <Achievements />
-        <Contact />
+        {/* <Contact /> */}
+        <LetsBuild />
+        <Signature />
         <Footer />
       </main>
     </div>

@@ -6,8 +6,8 @@ export const profile = {
   location: "Lahore, Pakistan",
   timezone: "PKT",
   bio: [
-    "I'm a Full Stack Web Developer specializing in modern, high-performance web applications with exceptional UI/UX and smooth user experiences.",
-    "I build premium websites, AI-powered applications, booking systems, dashboards, and scalable digital products using modern technologies.",
+    "I'm a Full Stack Web Developer, UI/UX Designer, and creative builder focused on premium, high-performance web experiences.",
+    "I build modern websites, AI-powered web apps, booking systems, dashboards, and polished interfaces with smooth motion and strong visuals.",
   ],
   socials: [
     {
@@ -23,8 +23,8 @@ export const profile = {
       href: "https://www.instagram.com/codegenius.dev/",
     },
     {
-      label: "Portfolio",
-      href: "https://abdullahabbad.netlify.app/",
+      label: "X",
+      href: "https://x.com/codegenius_dev",
     },
     {
       label: "Email",
@@ -45,5 +45,9 @@ export const skillBars = [
   {
     name: "FULL STACK",
     value: 90,
+  },
+  {
+    name: "AI INTEGRATION",
+    value: 85,
   },
 ];

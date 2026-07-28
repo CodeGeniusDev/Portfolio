@@ -14,8 +14,8 @@ export function ScrollProgress() {
     return () => window.removeEventListener("scroll", on);
   }, []);
   return (
-    <div className="fixed top-0 left-0 right-0 h-[2px] z-50 bg-white/5">
-      <div className="h-full bg-accent-lime" style={{ width: `${p * 100}%` }} />
+    <div className="fixed top-0 left-0 right-0 h-0.5 z-50 bg-white/5">
+      <div className="h-full bg-primary" style={{ width: `${p * 100}%` }} />
     </div>
   );
 }

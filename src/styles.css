@@ -40,13 +40,13 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.06 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.9 0.19 125);
-  --primary-foreground: oklch(0.15 0 0);
+  --primary: #9BC22D;
+  --primary-foreground: #1b1b1b;
   --secondary: oklch(0.15 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
+  --secondary-foreground: #fafafa;
   --muted: oklch(0.15 0 0);
   --muted-foreground: oklch(0.65 0 0);
-  --accent: oklch(0.9 0.19 125);
+  --accent: #CEF441;
   --accent-foreground: oklch(0.15 0 0);
   --destructive: oklch(0.6 0.24 27);
   --destructive-foreground: oklch(0.985 0 0);
@@ -55,24 +55,40 @@
   --ring: oklch(0.9 0.19 125);
 }
 
-.dark { color-scheme: dark; }
+.dark {
+  color-scheme: dark;
+}
 
 @layer base {
-  * { border-color: var(--color-border); }
-  html, body {
-    background-color: #050505;
+  * {
+    border-color: var(--color-border);
+  }
+
+  html,
+  body {
+    background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-display);
     -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
   }
-  ::selection { background: #c6f24e; color: #050505; }
-  @media (min-width: 1024px) { html { cursor: none; } }
+
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  @media (min-width: 1024px) {
+    html {
+      cursor: none;
+    }
+  }
 }
 
 @utility glass {
   background: color-mix(in oklab, #0a0a0a 70%, transparent);
   backdrop-filter: blur(20px) saturate(140%);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 @utility mono-label {
@@ -80,13 +96,36 @@
   text-transform: uppercase;
   letter-spacing: 0.14em;
   font-size: 0.68rem;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 @utility text-accent-lime {
-  color: #c6f24e;
+  color: var(--primary);
 }
 
 @utility bg-accent-lime {
-  background-color: #c6f24e;
+  background-color: var(--primary);
+}
+
+/* Add this to your global CSS file (e.g. src/index.css or src/styles/globals.css) —
+   wherever you have `@import "tailwindcss";` at the top */
+
+@keyframes marquee {
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 80s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
 }
