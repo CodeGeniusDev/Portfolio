@@ -24,7 +24,9 @@ export function Hud() {
             {/* {profile.monogram} */}
             <img
               src="/favicon.ico"
-              alt="favicon"
+              alt="Portfolio logo icon for Abdullah Abbad"
+              loading="eager"
+              fetchPriority="high"
               className="w-7 h-7 md:w-9 md:h-9"
             />
           </div>

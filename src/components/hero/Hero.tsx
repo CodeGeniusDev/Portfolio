@@ -140,8 +140,8 @@ export function Hero() {
           ref={imageRef1}
           src={portrait}
           loading="eager"
-          alt=""
-          aria-hidden
+          fetchPriority="high"
+          alt="Hero portrait of Abdullah Abbad with grayscale styling"
           width={1280}
           height={1600}
           className={`absolute left-1/2 -translate-x-1/2 h-full w-auto object-contain grayscale pointer-events-none transition-opacity duration-500 ${currentImage === 1 ? "opacity-100" : "opacity-0"}`}
@@ -154,8 +154,8 @@ export function Hero() {
           ref={imageRef2}
           src={portrait2}
           loading="eager"
-          alt=""
-          aria-hidden
+          fetchPriority="high"
+          alt="Alternative hero portrait of Abdullah Abbad with grayscale styling"
           width={1280}
           height={1600}
           className={`absolute left-1/2 -translate-x-1/2 h-full w-auto object-contain grayscale pointer-events-none transition-opacity duration-500 ${currentImage === 2 ? "opacity-100" : "opacity-0"}`}

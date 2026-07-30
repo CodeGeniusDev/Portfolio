@@ -17,7 +17,7 @@ function Card({ p }: { p: (typeof projects)[number] }) {
       <div className="aspect-16/10 overflow-hidden">
         <img
           src={p.image}
-          alt={p.title}
+          alt={`Project screenshot for ${p.title}`}
           loading="lazy"
           className="w-full h-full object-cover transition-transform duration-900 ease-out group-hover:scale-105"
         />

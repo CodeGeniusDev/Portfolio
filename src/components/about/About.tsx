@@ -22,7 +22,7 @@ export function About() {
         >
           <img
             src={portrait}
-            alt="Portrait"
+            alt="Portrait of Abdullah Abbad in a grayscale profile image"
             loading="lazy"
             className="w-full h-full object-cover grayscale"
           />

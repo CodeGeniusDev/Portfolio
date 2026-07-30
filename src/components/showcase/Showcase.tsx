@@ -304,7 +304,7 @@ function PanelIntro() {
             />
             <img
               src={portrait}
-              alt="Portrait"
+              alt="Portrait of Abdullah Abbad displayed in a circular showcase frame"
               className="absolute inset-10 w-[calc(100%-5rem)] h-[calc(100%-5rem)] object-cover rounded-full grayscale"
               loading="lazy"
             />
@@ -516,7 +516,7 @@ function PanelWork() {
               <div className="aspect-[4/5] overflow-hidden">
                 <img
                   src={p.image}
-                  alt={p.title}
+                  alt={`Showcase image for ${p.title}`}
                   loading="lazy"
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
                 />
