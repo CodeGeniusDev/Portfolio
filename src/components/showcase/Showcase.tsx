@@ -26,81 +26,94 @@ export function Showcase() {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    registerGsap();
-    const section = sectionRef.current;
-    const track = trackRef.current;
-    const progress = progressRef.current;
-    if (!section || !track || !progress) return;
-    if (window.matchMedia("(max-width: 767px)").matches) return;
+    let active = true;
+    let tween: gsap.core.Tween | null = null;
+    let timelines: Array<gsap.core.Timeline | null> = [];
 
-    const panelEls = gsap.utils.toArray<HTMLElement>("[data-sc-panel]", track);
-    const totalScroll = () => track.scrollWidth - window.innerWidth;
+    const init = async () => {
+      if (typeof window === "undefined") return;
+      if (window.matchMedia("(max-width: 767px)").matches) return;
+      await registerGsap();
+      const gs = gsap;
+      if (!active || !gs) return;
 
-    const tween = gsap.to(track, {
-      x: () => -totalScroll(),
-      ease: "none",
-      scrollTrigger: {
-        trigger: section,
-        pin: true,
-        scrub: 1,
-        start: "top top",
-        end: () => `+=${totalScroll()}`,
-        invalidateOnRefresh: true,
-        anticipatePin: 1,
-        onUpdate: (self) => {
-          const idx = Math.min(
-            panelEls.length - 1,
-            Math.floor(self.progress * panelEls.length),
-          );
-          setActive(idx);
-          gsap.to(progress, {
-            scaleX: self.progress,
-            duration: 0.2,
-            ease: "power2.out",
-            overwrite: true,
-          });
-        },
-      },
-    });
+      const section = sectionRef.current;
+      const track = trackRef.current;
+      const progress = progressRef.current;
+      if (!section || !track || !progress) return;
 
-    const timelines = panelEls.map((p) => {
-      const inner = p.querySelector<HTMLElement>("[data-sc-inner]");
-      const bigNum = p.querySelector<HTMLElement>("[data-sc-num]");
-      const floats = p.querySelectorAll<HTMLElement>("[data-sc-float]");
-      if (!inner || !bigNum) return null;
-      const tl = gsap.timeline({
+      const panelEls = gs.utils.toArray<HTMLElement>("[data-sc-panel]", track);
+      const totalScroll = () => track.scrollWidth - window.innerWidth;
+
+      tween = gs.to(track, {
+        x: () => -totalScroll(),
+        ease: "none",
         scrollTrigger: {
-          trigger: p,
-          containerAnimation: tween,
-          start: "left 85%",
-          end: "right 15%",
-          scrub: true,
+          trigger: section,
+          pin: true,
+          scrub: 1,
+          start: "top top",
+          end: () => `+=${totalScroll()}`,
+          invalidateOnRefresh: true,
+          anticipatePin: 1,
+          onUpdate: (self) => {
+            const idx = Math.min(
+              panelEls.length - 1,
+              Math.floor(self.progress * panelEls.length),
+            );
+            setActive(idx);
+            gs.to(progress, {
+              scaleX: self.progress,
+              duration: 0.2,
+              ease: "power2.out",
+              overwrite: true,
+            });
+          },
         },
       });
-      tl.fromTo(
-        inner,
-        { opacity: 0, scale: 0.9, filter: "blur(10px)", y: 40 },
-        { opacity: 1, scale: 1, filter: "blur(0px)", y: 0, ease: "power2.out" },
-        0,
-      )
-        .fromTo(
-          bigNum,
-          { xPercent: 25, opacity: 0.4 },
-          { xPercent: -25, opacity: 1, ease: "none" },
+
+      timelines = panelEls.map((p) => {
+        const inner = p.querySelector<HTMLElement>("[data-sc-inner]");
+        const bigNum = p.querySelector<HTMLElement>("[data-sc-num]");
+        const floats = p.querySelectorAll<HTMLElement>("[data-sc-float]");
+        if (!inner || !bigNum) return null;
+        const tl = gs.timeline({
+          scrollTrigger: {
+            trigger: p,
+            containerAnimation: tween!,
+            start: "left 85%",
+            end: "right 15%",
+            scrub: true,
+          },
+        });
+        tl.fromTo(
+          inner,
+          { opacity: 0, scale: 0.9, filter: "blur(10px)", y: 40 },
+          { opacity: 1, scale: 1, filter: "blur(0px)", y: 0, ease: "power2.out" },
           0,
         )
-        .fromTo(
-          floats,
-          { y: 60, opacity: 0 },
-          { y: 0, opacity: 1, stagger: 0.05, ease: "power3.out" },
-          0.1,
-        );
-      return tl;
-    });
+          .fromTo(
+            bigNum,
+            { xPercent: 25, opacity: 0.4 },
+            { xPercent: -25, opacity: 1, ease: "none" },
+            0,
+          )
+          .fromTo(
+            floats,
+            { y: 60, opacity: 0 },
+            { y: 0, opacity: 1, stagger: 0.05, ease: "power3.out" },
+            0.1,
+          );
+        return tl;
+      });
+    };
+
+    init();
 
     return () => {
-      tween.scrollTrigger?.kill();
-      tween.kill();
+      active = false;
+      tween?.scrollTrigger?.kill();
+      tween?.kill();
       timelines.forEach((t) => {
         t?.scrollTrigger?.kill();
         t?.kill();

@@ -7,43 +7,55 @@ export function Experience() {
   const lineRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    registerGsap();
-    const root = rootRef.current;
-    const line = lineRef.current;
-    if (!root || !line) return;
-
-    const fill = gsap.fromTo(
-      line,
-      { scaleY: 0 },
-      {
-        scaleY: 1,
-        ease: "none",
-        scrollTrigger: {
-          trigger: root,
-          start: "top 60%",
-          end: "bottom 80%",
-          scrub: true,
-        },
-      },
-    );
-
-    const cards = root.querySelectorAll("[data-tl-card]");
+    let active = true;
+    let fill: gsap.core.Tween | null = null;
     const anims: gsap.core.Tween[] = [];
-    cards.forEach((c) => {
-      anims.push(
-        gsap.from(c, {
+
+    const init = async () => {
+      if (typeof window === "undefined") return;
+      await registerGsap();
+      const gs = gsap;
+      const scrollTrigger = ScrollTrigger;
+      if (!active || !gs || !scrollTrigger) return;
+
+      const root = rootRef.current;
+      const line = lineRef.current;
+      if (!root || !line) return;
+
+      fill = gs.fromTo(
+        line,
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: root,
+            start: "top 60%",
+            end: "bottom 80%",
+            scrub: true,
+          },
+        },
+      );
+
+      const cards = root.querySelectorAll("[data-tl-card]");
+      cards.forEach((c) => {
+        const anim = gs.from(c, {
           y: 60,
           opacity: 0,
           duration: 0.9,
           ease: "power3.out",
           scrollTrigger: { trigger: c, start: "top 82%" },
-        }),
-      );
-    });
+        });
+        anims.push(anim);
+      });
+    };
+
+    init();
 
     return () => {
-      fill.scrollTrigger?.kill();
-      fill.kill();
+      active = false;
+      fill?.scrollTrigger?.kill();
+      fill?.kill();
       anims.forEach((a) => {
         a.scrollTrigger?.kill();
         a.kill();

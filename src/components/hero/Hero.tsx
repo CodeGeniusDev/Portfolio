@@ -5,7 +5,7 @@ import { profile, skillBars } from "@/data/profile";
 import { useSplitChars } from "@/hooks/useSplitText";
 import { useMagnetic } from "@/hooks/useMagneticEffect";
 import { FiArrowUpRight, FiMapPin, FiClock } from "react-icons/fi";
-import gsap from "gsap";
+import { gsap, registerGsap } from "@/lib/gsap";
 
 function useIstTime() {
   const [t, setT] = useState("");
@@ -42,69 +42,73 @@ export function Hero() {
   }, []);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    let active = true;
+    let pieces: HTMLDivElement[] = [];
 
-    const container = containerRef.current;
-    const outgoingImage =
-      currentImage === 1 ? imageRef1.current : imageRef2.current;
+    const init = async () => {
+      if (typeof window === "undefined") return;
+      await registerGsap();
+      const gs = gsap;
+      if (!active || !gs) return;
+      if (!containerRef.current) return;
 
-    if (!outgoingImage) return;
+      const container = containerRef.current;
+      const outgoingImage =
+        currentImage === 1 ? imageRef1.current : imageRef2.current;
 
-    // Get actual image bounds
-    const imageRect = outgoingImage.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
+      if (!outgoingImage) return;
 
-    // Calculate position relative to container
-    const relativeLeft = imageRect.left - containerRect.left;
-    const relativeTop = imageRect.top - containerRect.top;
+      const imageRect = outgoingImage.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      const relativeLeft = imageRect.left - containerRect.left;
+      const relativeTop = imageRect.top - containerRect.top;
 
-    // Clear previous crack elements
-    const existingCracks = container.querySelectorAll(".crack-piece");
-    existingCracks.forEach((crack) => crack.remove());
+      container.querySelectorAll(".crack-piece").forEach((crack) => crack.remove());
 
-    // Create simple crack pieces
-    const numPieces = 8;
-    const pieces: HTMLDivElement[] = [];
+      const numPieces = 8;
+      for (let i = 0; i < numPieces; i++) {
+        const piece = document.createElement("div");
+        piece.className = "crack-piece absolute overflow-hidden";
+        const yPos = (i / numPieces) * 100;
+        const height = (1 / numPieces) * 100;
 
-    for (let i = 0; i < numPieces; i++) {
-      const piece = document.createElement("div");
-      piece.className = "crack-piece absolute overflow-hidden";
+        piece.style.clipPath = `polygon(0 ${yPos}%, 100% ${yPos}%, 100% ${yPos + height}%, 0 ${yPos + height}%)`;
+        piece.style.left = `${relativeLeft}px`;
+        piece.style.top = `${relativeTop}px`;
+        piece.style.width = `${imageRect.width}px`;
+        piece.style.height = `${imageRect.height}px`;
 
-      // Create horizontal strips matching image dimensions
-      const yPos = (i / numPieces) * 100;
-      const height = (1 / numPieces) * 100;
+        const imgClone = outgoingImage.cloneNode(true) as HTMLImageElement;
+        imgClone.className =
+          "absolute left-0 top-0 h-full w-full object-contain grayscale pointer-events-none";
+        imgClone.style.transform = "none";
+        imgClone.style.maskImage =
+          "linear-gradient(to bottom, black 78%, transparent 100%)";
 
-      piece.style.clipPath = `polygon(0 ${yPos}%, 100% ${yPos}%, 100% ${yPos + height}%, 0 ${yPos + height}%)`;
-      piece.style.left = `${relativeLeft}px`;
-      piece.style.top = `${relativeTop}px`;
-      piece.style.width = `${imageRect.width}px`;
-      piece.style.height = `${imageRect.height}px`;
+        piece.appendChild(imgClone);
+        container.appendChild(piece);
+        pieces.push(piece);
+      }
 
-      const imgClone = outgoingImage.cloneNode(true) as HTMLImageElement;
-      imgClone.className =
-        "absolute left-0 top-0 h-full w-full object-contain grayscale pointer-events-none";
-      imgClone.style.transform = "none";
-      imgClone.style.maskImage =
-        "linear-gradient(to bottom, black 78%, transparent 100%)";
+      gs.to(pieces, {
+        x: () => gs.utils.random(-30, 30),
+        y: () => gs.utils.random(-20, 20),
+        rotation: () => gs.utils.random(-5, 5),
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.05,
+        ease: "power2.out",
+        onComplete: () => {
+          pieces.forEach((piece) => piece.remove());
+        },
+      });
+    };
 
-      piece.appendChild(imgClone);
-      container.appendChild(piece);
-      pieces.push(piece);
-    }
-
-    // Animate crack pieces
-    gsap.to(pieces, {
-      x: () => gsap.utils.random(-30, 30),
-      y: () => gsap.utils.random(-20, 20),
-      rotation: () => gsap.utils.random(-5, 5),
-      opacity: 0,
-      duration: 0.6,
-      stagger: 0.05,
-      ease: "power2.out",
-      onComplete: () => {
-        pieces.forEach((piece) => piece.remove());
-      },
-    });
+    init();
+    return () => {
+      active = false;
+      pieces.forEach((piece) => piece.remove());
+    };
   }, [currentImage]);
 
   return (

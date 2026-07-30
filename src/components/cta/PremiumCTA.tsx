@@ -53,18 +53,34 @@ function Button({
   const ref = useMagnetic<HTMLAnchorElement>(0.3);
 
   useEffect(() => {
+    let active = true;
+    let enter: (() => void) | null = null;
+    let leave: (() => void) | null = null;
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const enter = () =>
-      gsap.to(el, { scale: 1.06, duration: 0.35, ease: "power2.out" });
-    const leave = () =>
-      gsap.to(el, { scale: 1, duration: 0.35, ease: "power2.out" });
-    el.addEventListener("mouseenter", enter);
-    el.addEventListener("mouseleave", leave);
+
+    const init = async () => {
+      if (typeof window === "undefined") return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      await registerGsap();
+      const gs = gsap;
+      if (!active || !gs) return;
+
+      enter = () =>
+        gs.to(el, { scale: 1.06, duration: 0.35, ease: "power2.out" });
+      leave = () =>
+        gs.to(el, { scale: 1, duration: 0.35, ease: "power2.out" });
+
+      el.addEventListener("mouseenter", enter);
+      el.addEventListener("mouseleave", leave);
+    };
+
+    init();
+
     return () => {
-      el.removeEventListener("mouseenter", enter);
-      el.removeEventListener("mouseleave", leave);
+      active = false;
+      if (enter) el.removeEventListener("mouseenter", enter);
+      if (leave) el.removeEventListener("mouseleave", leave);
     };
   }, [ref]);
 
@@ -107,138 +123,156 @@ export function LetsBuild() {
   const lineRef = useRef<SVGPathElement>(null);
 
   useEffect(() => {
-    registerGsap();
-    const section = sectionRef.current;
-    if (!section) return;
-    const reduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+    let active = true;
+    let cleanup = () => {
+      /* no-op */
+    };
 
-    const tweens: gsap.core.Tween[] = [];
-    const triggers: (ScrollTrigger | undefined)[] = [];
+    const init = async () => {
+      if (typeof window === "undefined") return;
+      await registerGsap();
+      const gs = gsap;
+      const scrollTrigger = ScrollTrigger;
+      if (!active || !gs || !scrollTrigger) return;
 
-    if (reduced) {
-      gsap.set(headlineRef.current?.querySelectorAll("[data-line]") ?? [], {
-        opacity: 1,
-      });
-      gsap.set(descRef.current, { opacity: 1, y: 0 });
-      gsap.set(buttonsRef.current?.querySelectorAll("[data-btn]") ?? [], {
-        opacity: 1,
-        y: 0,
-      });
-      return;
-    }
+      const section = sectionRef.current;
+      if (!section) return;
+      const reduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
 
-    const lineEls = Array.from(
-      headlineRef.current?.querySelectorAll<HTMLElement>("[data-line]") ?? [],
-    );
-    lineEls.forEach((lineEl, li) => {
-      const chars = splitIntoChars(lineEl);
-      const t = gsap.fromTo(
-        chars,
-        { yPercent: 120, opacity: 0, scale: 0.7 },
-        {
-          yPercent: 0,
+      const tweens: gsap.core.Tween[] = [];
+      const triggers: (ScrollTrigger | undefined)[] = [];
+
+      if (reduced) {
+        gs.set(headlineRef.current?.querySelectorAll("[data-line]") ?? [], {
           opacity: 1,
-          scale: 1,
-          duration: 1,
-          ease: "power4.out",
-          stagger: 0.02,
-          delay: li * 0.08,
-          scrollTrigger: { trigger: section, start: "top 70%" },
-        },
+        });
+        gs.set(descRef.current, { opacity: 1, y: 0 });
+        gs.set(buttonsRef.current?.querySelectorAll("[data-btn]") ?? [], {
+          opacity: 1,
+          y: 0,
+        });
+        return;
+      }
+
+      const lineEls = Array.from(
+        headlineRef.current?.querySelectorAll<HTMLElement>("[data-line]") ?? [],
       );
-      tweens.push(t);
-      triggers.push(t.scrollTrigger);
-    });
+      lineEls.forEach((lineEl, li) => {
+        const chars = splitIntoChars(lineEl);
+        const t = gs.fromTo(
+          chars,
+          { yPercent: 120, opacity: 0, scale: 0.7 },
+          {
+            yPercent: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1,
+            ease: "power4.out",
+            stagger: 0.02,
+            delay: li * 0.08,
+            scrollTrigger: { trigger: section, start: "top 70%" },
+          },
+        );
+        tweens.push(t);
+        triggers.push(t.scrollTrigger);
+      });
 
-    const descTween = gsap.fromTo(
-      descRef.current,
-      { y: 30, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.9,
-        ease: "power3.out",
-        delay: 0.5,
-        scrollTrigger: { trigger: section, start: "top 70%" },
-      },
-    );
-    tweens.push(descTween);
-    triggers.push(descTween.scrollTrigger);
-
-    const btns = buttonsRef.current?.querySelectorAll("[data-btn]");
-    if (btns?.length) {
-      const btnTween = gsap.fromTo(
-        btns,
-        { y: 40, opacity: 0 },
+      const descTween = gs.fromTo(
+        descRef.current,
+        { y: 30, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          duration: 0.7,
+          duration: 0.9,
           ease: "power3.out",
-          stagger: 0.1,
-          delay: 0.7,
+          delay: 0.5,
           scrollTrigger: { trigger: section, start: "top 70%" },
         },
       );
-      tweens.push(btnTween);
-      triggers.push(btnTween.scrollTrigger);
-    }
+      tweens.push(descTween);
+      triggers.push(descTween.scrollTrigger);
 
-    const parallaxTween = gsap.to(bgTextRef.current, {
-      yPercent: -15,
-      ease: "none",
-      scrollTrigger: {
-        trigger: section,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true,
-      },
-    });
-    tweens.push(parallaxTween);
-    triggers.push(parallaxTween.scrollTrigger);
+      const btns = buttonsRef.current?.querySelectorAll("[data-btn]");
+      if (btns?.length) {
+        const btnTween = gs.fromTo(
+          btns,
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            ease: "power3.out",
+            stagger: 0.1,
+            delay: 0.7,
+            scrollTrigger: { trigger: section, start: "top 70%" },
+          },
+        );
+        tweens.push(btnTween);
+        triggers.push(btnTween.scrollTrigger);
+      }
 
-    const floaters = [
-      { ref: shape1Ref, y: -28, rotate: 16, duration: 4.5, delay: 0 },
-      { ref: shape2Ref, y: 22, rotate: -14, duration: 5.5, delay: 0.4 },
-      { ref: shape3Ref, y: -18, rotate: 22, duration: 6.5, delay: 0.8 },
-    ];
-    floaters.forEach((f) => {
-      const t = gsap.to(f.ref.current, {
-        y: f.y,
-        rotate: f.rotate,
-        duration: f.duration,
-        delay: f.delay,
-        ease: "sine.inOut",
-        yoyo: true,
-        repeat: -1,
-      });
-      tweens.push(t);
-    });
-
-    const path = lineRef.current;
-    let pathTween: gsap.core.Tween | null = null;
-    if (path) {
-      const len = path.getTotalLength();
-      gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
-      pathTween = gsap.to(path, {
-        strokeDashoffset: 0,
+      const parallaxTween = gs.to(bgTextRef.current, {
+        yPercent: -15,
         ease: "none",
         scrollTrigger: {
           trigger: section,
-          start: "top 85%",
-          end: "top 15%",
+          start: "top bottom",
+          end: "bottom top",
           scrub: true,
         },
       });
-      tweens.push(pathTween);
-      triggers.push(pathTween.scrollTrigger);
-    }
+      tweens.push(parallaxTween);
+      triggers.push(parallaxTween.scrollTrigger);
 
+      const floaters = [
+        { ref: shape1Ref, y: -28, rotate: 16, duration: 4.5, delay: 0 },
+        { ref: shape2Ref, y: 22, rotate: -14, duration: 5.5, delay: 0.4 },
+        { ref: shape3Ref, y: -18, rotate: 22, duration: 6.5, delay: 0.8 },
+      ];
+      floaters.forEach((f) => {
+        const t = gs.to(f.ref.current, {
+          y: f.y,
+          rotate: f.rotate,
+          duration: f.duration,
+          delay: f.delay,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+        });
+        tweens.push(t);
+      });
+
+      const path = lineRef.current;
+      let pathTween: gsap.core.Tween | null = null;
+      if (path) {
+        const len = path.getTotalLength();
+        gs.set(path, { strokeDasharray: len, strokeDashoffset: len });
+        pathTween = gs.to(path, {
+          strokeDashoffset: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 85%",
+            end: "top 15%",
+            scrub: true,
+          },
+        });
+        tweens.push(pathTween);
+        triggers.push(pathTween.scrollTrigger);
+      }
+
+      cleanup = () => {
+        triggers.forEach((tr) => tr?.kill());
+        tweens.forEach((t) => t.kill());
+      };
+    };
+
+    init();
     return () => {
-      triggers.forEach((tr) => tr?.kill());
-      tweens.forEach((t) => t.kill());
+      active = false;
+      cleanup();
     };
   }, []);
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { gsap } from "@/lib/gsap";
+import { gsap, registerGsap } from "@/lib/gsap";
 
 export function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -7,29 +7,49 @@ export function CustomCursor() {
   const [hover, setHover] = useState(false);
 
   useEffect(() => {
-    if (window.matchMedia("(pointer: coarse)").matches) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const dot = dotRef.current!;
-    const ring = ringRef.current!;
-    const dx = gsap.quickTo(dot, "x", { duration: 0.08, ease: "power3.out" });
-    const dy = gsap.quickTo(dot, "y", { duration: 0.08, ease: "power3.out" });
-    const rx = gsap.quickTo(ring, "x", { duration: 0.4, ease: "power3.out" });
-    const ry = gsap.quickTo(ring, "y", { duration: 0.4, ease: "power3.out" });
-    const move = (e: MouseEvent) => {
-      dx(e.clientX);
-      dy(e.clientY);
-      rx(e.clientX);
-      ry(e.clientY);
+    let active = true;
+    let moveHandler: ((e: MouseEvent) => void) | null = null;
+    let overHandler: ((e: MouseEvent) => void) | null = null;
+
+    const init = async () => {
+      if (typeof window === "undefined") return;
+      if (window.matchMedia("(pointer: coarse)").matches) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      await registerGsap();
+      const gs = gsap;
+      if (!active || !gs) return;
+
+      const dot = dotRef.current;
+      const ring = ringRef.current;
+      if (!dot || !ring) return;
+
+      const dx = gs.quickTo(dot, "x", { duration: 0.08, ease: "power3.out" });
+      const dy = gs.quickTo(dot, "y", { duration: 0.08, ease: "power3.out" });
+      const rx = gs.quickTo(ring, "x", { duration: 0.4, ease: "power3.out" });
+      const ry = gs.quickTo(ring, "y", { duration: 0.4, ease: "power3.out" });
+
+      moveHandler = (e: MouseEvent) => {
+        dx(e.clientX);
+        dy(e.clientY);
+        rx(e.clientX);
+        ry(e.clientY);
+      };
+
+      overHandler = (e: MouseEvent) => {
+        const t = e.target as HTMLElement;
+        setHover(!!t.closest("a,button,[data-cursor='hover']"));
+      };
+
+      window.addEventListener("mousemove", moveHandler);
+      window.addEventListener("mouseover", overHandler);
     };
-    const over = (e: MouseEvent) => {
-      const t = e.target as HTMLElement;
-      setHover(!!t.closest("a,button,[data-cursor='hover']"));
-    };
-    window.addEventListener("mousemove", move);
-    window.addEventListener("mouseover", over);
+
+    init();
+
     return () => {
-      window.removeEventListener("mousemove", move);
-      window.removeEventListener("mouseover", over);
+      active = false;
+      if (moveHandler) window.removeEventListener("mousemove", moveHandler);
+      if (overHandler) window.removeEventListener("mouseover", overHandler);
     };
   }, []);
 

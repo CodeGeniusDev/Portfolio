@@ -4,25 +4,41 @@ import { gsap, ScrollTrigger, registerGsap } from "@/lib/gsap";
 
 function Counter({ v }: { v: number }) {
   const ref = useRef<HTMLSpanElement>(null);
+
   useEffect(() => {
-    registerGsap();
-    const el = ref.current;
-    if (!el) return;
-    const obj = { n: 0 };
-    const anim = gsap.to(obj, {
-      n: v,
-      duration: 2,
-      ease: "power2.out",
-      onUpdate: () => {
-        el.textContent = Math.round(obj.n).toLocaleString();
-      },
-      scrollTrigger: { trigger: el, start: "top 85%", once: true },
-    });
+    let active = true;
+    let anim: gsap.core.Tween | null = null;
+
+    const init = async () => {
+      if (typeof window === "undefined") return;
+      await registerGsap();
+      const gs = gsap;
+      if (!active || !gs) return;
+
+      const el = ref.current;
+      if (!el) return;
+
+      const obj = { n: 0 };
+      anim = gs.to(obj, {
+        n: v,
+        duration: 2,
+        ease: "power2.out",
+        onUpdate: () => {
+          el.textContent = Math.round(obj.n).toLocaleString();
+        },
+        scrollTrigger: { trigger: el, start: "top 85%", once: true },
+      });
+    };
+
+    init();
+
     return () => {
-      anim.scrollTrigger?.kill();
-      anim.kill();
+      active = false;
+      anim?.scrollTrigger?.kill();
+      anim?.kill();
     };
   }, [v]);
+
   return <span ref={ref}>0</span>;
 }
 

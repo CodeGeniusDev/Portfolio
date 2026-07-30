@@ -85,26 +85,40 @@ function MagneticLink({
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (window.matchMedia("(pointer: coarse)").matches) return;
 
-    const enter = () =>
-      gsap.to(el, {
-        scale: 1 + strength * 0.2,
-        duration: 0.3,
-        ease: "power2.out",
-      });
+    let cleanup: (() => void) | null = null;
 
-    const leave = () =>
-      gsap.to(el, {
-        scale: 1,
-        duration: 0.3,
-        ease: "power2.out",
-      });
+    const init = async () => {
+      await registerGsap();
+      const gs = gsap;
+      if (!gs) return;
 
-    el.addEventListener("mouseenter", enter);
-    el.addEventListener("mouseleave", leave);
+      const enter = () =>
+        gs.to(el, {
+          scale: 1 + strength * 0.2,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+
+      const leave = () =>
+        gs.to(el, {
+          scale: 1,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+
+      el.addEventListener("mouseenter", enter);
+      el.addEventListener("mouseleave", leave);
+
+      cleanup = () => {
+        el.removeEventListener("mouseenter", enter);
+        el.removeEventListener("mouseleave", leave);
+      };
+    };
+
+    void init();
 
     return () => {
-      el.removeEventListener("mouseenter", enter);
-      el.removeEventListener("mouseleave", leave);
+      cleanup?.();
     };
   }, [ref, strength]);
 
@@ -135,176 +149,189 @@ export function Signature() {
   const sparkRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    registerGsap();
-
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const reduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
+    let active = true;
     const tweens: gsap.core.Tween[] = [];
     const triggers: (ScrollTrigger | undefined)[] = [];
 
-    if (reduced) {
-      gsap.set(
-        [
-          nameRef.current?.querySelectorAll("[data-line]"),
-          topRef.current,
-          navRef.current?.querySelectorAll("[data-item]"),
-          socialRef.current?.querySelectorAll("[data-item]"),
-          ctaRef.current,
-        ],
-        { opacity: 1, y: 0, x: 0 },
-      );
-      return;
-    }
+    const init = async () => {
+      if (typeof window === "undefined") return;
+      await registerGsap();
+      const gs = gsap;
+      const scrollTrigger = ScrollTrigger;
+      if (!active || !gs || !scrollTrigger) return;
 
-    const topTween = gsap.fromTo(
-      topRef.current,
-      { y: -20, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: "power3.out",
-        scrollTrigger: { trigger: section, start: "top 75%" },
-      },
-    );
-    tweens.push(topTween);
-    triggers.push(topTween.scrollTrigger);
+      const section = sectionRef.current;
+      if (!section) return;
 
-    const lineEls = Array.from(
-      nameRef.current?.querySelectorAll<HTMLElement>("[data-line]") ?? [],
-    );
+      const reduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
 
-    lineEls.forEach((lineEl, li) => {
-      const chars = splitIntoChars(lineEl);
-      const t = gsap.fromTo(
-        chars,
-        { yPercent: 120, opacity: 0 },
+      if (reduced) {
+        gs.set(
+          [
+            nameRef.current?.querySelectorAll("[data-line]"),
+            topRef.current,
+            navRef.current?.querySelectorAll("[data-item]"),
+            socialRef.current?.querySelectorAll("[data-item]"),
+            ctaRef.current,
+          ],
+          { opacity: 1, y: 0, x: 0 },
+        );
+        return;
+      }
+
+      const topTween = gs.fromTo(
+        topRef.current,
+        { y: -20, opacity: 0 },
         {
-          yPercent: 0,
+          y: 0,
           opacity: 1,
-          duration: 1,
-          ease: "power4.out",
-          stagger: 0.02,
-          delay: 0.15 + li * 0.1,
-          scrollTrigger: { trigger: section, start: "top 70%" },
-        },
-      );
-      tweens.push(t);
-      triggers.push(t.scrollTrigger);
-    });
-
-    const navItems = navRef.current?.querySelectorAll("[data-item]");
-    if (navItems?.length) {
-      const t = gsap.fromTo(
-        navItems,
-        { x: -30, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 0.7,
+          duration: 0.8,
           ease: "power3.out",
-          stagger: 0.08,
-          delay: 0.5,
-          scrollTrigger: { trigger: section, start: "top 70%" },
+          scrollTrigger: { trigger: section, start: "top 75%" },
         },
       );
-      tweens.push(t);
-      triggers.push(t.scrollTrigger);
-    }
+      tweens.push(topTween);
+      triggers.push(topTween.scrollTrigger);
 
-    const socialItems = socialRef.current?.querySelectorAll("[data-item]");
-    if (socialItems?.length) {
-      const t = gsap.fromTo(
-        socialItems,
-        { x: 30, opacity: 0 },
+      const lineEls = Array.from(
+        nameRef.current?.querySelectorAll<HTMLElement>("[data-line]") ?? [],
+      );
+
+      lineEls.forEach((lineEl, li) => {
+        const chars = splitIntoChars(lineEl);
+        const t = gs.fromTo(
+          chars,
+          { yPercent: 120, opacity: 0 },
+          {
+            yPercent: 0,
+            opacity: 1,
+            duration: 1,
+            ease: "power4.out",
+            stagger: 0.02,
+            delay: 0.15 + li * 0.1,
+            scrollTrigger: { trigger: section, start: "top 70%" },
+          },
+        );
+        tweens.push(t);
+        triggers.push(t.scrollTrigger);
+      });
+
+      const navItems = navRef.current?.querySelectorAll("[data-item]");
+      if (navItems?.length) {
+        const t = gs.fromTo(
+          navItems,
+          { x: -30, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.7,
+            ease: "power3.out",
+            stagger: 0.08,
+            delay: 0.5,
+            scrollTrigger: { trigger: section, start: "top 70%" },
+          },
+        );
+        tweens.push(t);
+        triggers.push(t.scrollTrigger);
+      }
+
+      const socialItems = socialRef.current?.querySelectorAll("[data-item]");
+      if (socialItems?.length) {
+        const t = gs.fromTo(
+          socialItems,
+          { x: 30, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.7,
+            ease: "power3.out",
+            stagger: 0.08,
+            delay: 0.5,
+            scrollTrigger: { trigger: section, start: "top 70%" },
+          },
+        );
+        tweens.push(t);
+        triggers.push(t.scrollTrigger);
+      }
+
+      const ctaTween = gs.fromTo(
+        ctaRef.current,
+        { y: 30, opacity: 0 },
         {
-          x: 0,
+          y: 0,
           opacity: 1,
-          duration: 0.7,
+          duration: 0.8,
           ease: "power3.out",
-          stagger: 0.08,
-          delay: 0.5,
+          delay: 0.8,
           scrollTrigger: { trigger: section, start: "top 70%" },
         },
       );
-      tweens.push(t);
-      triggers.push(t.scrollTrigger);
-    }
+      tweens.push(ctaTween);
+      triggers.push(ctaTween.scrollTrigger);
 
-    const ctaTween = gsap.fromTo(
-      ctaRef.current,
-      { y: 30, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: "power3.out",
-        delay: 0.8,
-        scrollTrigger: { trigger: section, start: "top 70%" },
-      },
-    );
-    tweens.push(ctaTween);
-    triggers.push(ctaTween.scrollTrigger);
-
-    const ghostTween = gsap.to(ghostRef.current, {
-      yPercent: -12,
-      ease: "none",
-      scrollTrigger: {
-        trigger: section,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true,
-      },
-    });
-    tweens.push(ghostTween);
-    triggers.push(ghostTween.scrollTrigger);
-
-    [line1Ref, line2Ref].forEach((r, i) => {
-      const path = r.current;
-      if (!path) return;
-
-      const len = path.getTotalLength();
-      gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
-
-      const t = gsap.to(path, {
-        strokeDashoffset: 0,
+      const ghostTween = gs.to(ghostRef.current, {
+        yPercent: -12,
         ease: "none",
         scrollTrigger: {
           trigger: section,
-          start: `top ${85 - i * 5}%`,
-          end: `top ${25 - i * 5}%`,
+          start: "top bottom",
+          end: "bottom top",
           scrub: true,
         },
       });
+      tweens.push(ghostTween);
+      triggers.push(ghostTween.scrollTrigger);
 
-      tweens.push(t);
-      triggers.push(t.scrollTrigger);
-    });
+      [line1Ref, line2Ref].forEach((r, i) => {
+        const path = r.current;
+        if (!path) return;
 
-    const sparkTween = gsap.to(sparkRef.current, {
-      y: -14,
-      rotate: 25,
-      duration: 3.5,
-      ease: "sine.inOut",
-      yoyo: true,
-      repeat: -1,
-    });
-    tweens.push(sparkTween);
+        const len = path.getTotalLength();
+        gs.set(path, { strokeDasharray: len, strokeDashoffset: len });
 
-    const refreshOnResize = () => ScrollTrigger.refresh();
-    window.addEventListener("resize", refreshOnResize);
-    window.addEventListener("orientationchange", refreshOnResize);
+        const t = gs.to(path, {
+          strokeDashoffset: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: `top ${85 - i * 5}%`,
+            end: `top ${25 - i * 5}%`,
+            scrub: true,
+          },
+        });
 
+        tweens.push(t);
+        triggers.push(t.scrollTrigger);
+      });
+
+      const sparkTween = gs.to(sparkRef.current, {
+        y: -14,
+        rotate: 25,
+        duration: 3.5,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+      });
+      tweens.push(sparkTween);
+
+      const refreshOnResize = () => scrollTrigger.refresh();
+      window.addEventListener("resize", refreshOnResize);
+      window.addEventListener("orientationchange", refreshOnResize);
+
+      return () => {
+        window.removeEventListener("resize", refreshOnResize);
+        window.removeEventListener("orientationchange", refreshOnResize);
+        triggers.forEach((tr) => tr?.kill());
+        tweens.forEach((t) => t.kill());
+      };
+    };
+
+    const cleanup = init();
     return () => {
-      window.removeEventListener("resize", refreshOnResize);
-      window.removeEventListener("orientationchange", refreshOnResize);
-      triggers.forEach((tr) => tr?.kill());
-      tweens.forEach((t) => t.kill());
+      active = false;
+      cleanup.then((fn) => fn?.());
     };
   }, []);
 
