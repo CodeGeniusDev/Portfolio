@@ -37,9 +37,9 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
+  // useEffect(() => {
+  //   reportLovableError(error, { boundary: "tanstack_root_error_component" });
+  // }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -77,23 +77,83 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Portfolio — Full Stack Developer" },
-      { name: "description", content: "Premium portfolio: motion-rich, dark, minimal. Full stack engineering, motion design, and product craft." },
-      { property: "og:title", content: "Portfolio — Full Stack Developer" },
-      { property: "og:description", content: "Premium portfolio: motion-rich, dark, minimal. Full stack engineering, motion design, and product craft." },
-      { property: "og:type", content: "website" },
+
+      { title: "Abdullah Abbad | Full Stack Web Developer & UI/UX Designer" },
+      {
+        name: "description",
+        content:
+          "Abdullah Abbad is a Full Stack Web Developer and UI/UX Designer from Lahore, Pakistan, building premium websites, AI-powered applications, dashboards, booking systems, and modern digital experiences.",
+      },
+      {
+        name: "keywords",
+        content:
+          "Abdullah Abbad, CodeGeniusDev, Full Stack Developer, React Developer, Next.js Developer, TypeScript Developer, UI UX Designer, Web Developer Lahore Pakistan, AI Web Developer, Portfolio, CodeBytes Agency, GSAP, Three.js, Tailwind CSS, Node.js, Firebase, Supabase",
+      },
+      { name: "author", content: "Abdullah Abbad" },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
+      { name: "language", content: "English" },
+      { name: "theme-color", content: "#AFCD5F" },
+      { name: "color-scheme", content: "dark light" },
+
+      {
+        property: "og:type",
+        content: "website",
+      },
+      {
+        property: "og:site_name",
+        content: "Abdullah Abbad Portfolio",
+      },
+      {
+        property: "og:title",
+        content: "Abdullah Abbad | Full Stack Web Developer & UI/UX Designer",
+      },
+      {
+        property: "og:description",
+        content:
+          "Premium portfolio of Abdullah Abbad showcasing modern web development, UI/UX design, AI-powered applications, and interactive digital experiences.",
+      },
+      {
+        property: "og:url",
+        content: "https://abdullahabbad.netlify.app/",
+      },
+      {
+        property: "og:image",
+        content: "https://abdullahabbad.netlify.app/og-image.jpg",
+      },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:locale", content: "en_US" },
+
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Portfolio — Full Stack Developer" },
-      { name: "twitter:description", content: "Premium portfolio: motion-rich, dark, minimal. Full stack engineering, motion design, and product craft." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/bd523cd6-ae5d-41de-9bb7-1c3def908751/id-preview-8467228a--c53cd857-bd16-4bb2-99aa-585b7e5ec1e6.lovable.app-1784634609618.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/bd523cd6-ae5d-41de-9bb7-1c3def908751/id-preview-8467228a--c53cd857-bd16-4bb2-99aa-585b7e5ec1e6.lovable.app-1784634609618.png" },
+      {
+        name: "twitter:title",
+        content: "Abdullah Abbad | Full Stack Web Developer",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Full Stack Web Developer, UI/UX Designer, and AI enthusiast building premium web experiences.",
+      },
+      {
+        name: "twitter:image",
+        content: "https://abdullahabbad.netlify.app/og-image.jpg",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/favicon.ico" },
+      { rel: "manifest", href: "/site.webmanifest" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" },
+      {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,
