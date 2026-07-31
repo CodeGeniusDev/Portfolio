@@ -471,9 +471,9 @@ export function Signature() {
           </div>
 
           <div className="relative z-10 grid grid-cols-1 items-end gap-6 sm:gap-8 lg:grid-cols-[1fr_auto_1fr]">
-            <div ref={navRef} className="order-2 lg:order-1">
+            <div ref={navRef} className="order-2 lg:order-1 lg:text-left text-right">
               <p
-                className="mono-label mb-2 sm:mb-3"
+                className="mono-label mb-2 sm:mb-3 lg:text-left text-center"
                 style={{ color: "rgba(13,13,13,0.55)" }}
               >
                 Links <span style={{ opacity: 0.5 }}>/</span> Menu
@@ -498,6 +498,7 @@ export function Signature() {
               </ul>
             </div>
 
+            {/* Call-to-Action */}
             <div ref={ctaRef} className="order-1 flex justify-center lg:order-2">
               <MagneticLink
                 href="mailto:abdullahabbad916@gmail.com"

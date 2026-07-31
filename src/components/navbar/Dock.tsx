@@ -96,7 +96,7 @@ function DockButton({
         rel={external || isResume ? "noopener noreferrer" : undefined}
         aria-label={label}
         className="
-          flex h-8 w-8 flex-shrink-0 items-center justify-center
+          flex w-9 h-9 flex-shrink-0 items-center justify-center
           rounded-full
           text-white/70
           transition-colors
@@ -104,7 +104,7 @@ function DockButton({
           md:h-10 md:w-10
         "
       >
-        <Icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
+        <Icon className="h-5 w-5 md:h-4 md:w-4" />
       </a>
     </div>
   );
