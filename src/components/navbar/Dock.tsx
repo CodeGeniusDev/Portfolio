@@ -96,7 +96,7 @@ function DockButton({
         rel={external || isResume ? "noopener noreferrer" : undefined}
         aria-label={label}
         className="
-          flex w-9 h-9 flex-shrink-0 items-center justify-center
+          flex w-12 h-12 flex-shrink-0 items-center justify-center
           rounded-full
           text-white/70
           transition-colors
