@@ -65,7 +65,7 @@ export function CustomCursor() {
         style={{
           width: hover ? 56 : 28,
           height: hover ? 56 : 28,
-          background: hover ? "rgb(155, 194, 45, 0.15)" : "transparent",
+          background: hover ? "rgba(155, 194, 45, 0.15)" : "transparent",
           borderColor: hover ? "var(--primary)" : "rgba(255,255,255,0.35)",
           mixBlendMode: "difference",
         }}

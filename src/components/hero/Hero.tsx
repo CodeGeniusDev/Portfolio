@@ -114,27 +114,35 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen w-full overflow-hidden"
+      className="relative min-h-screen w-full overflow-hidden bg-primary-card"
       aria-label="Hero"
     >
       {/* ghost wordmark */}
-      <div className="pointer-events-none absolute inset-x-0 top-[46%] flex justify-center">
-        <span
-          className="font-display font-black uppercase leading-none tracking-tighter select-none text-center px-4"
-          style={{
-            fontSize: "clamp(2rem, 10vw, 20rem)",
-            color: "transparent",
-            WebkitTextStroke: "1px rgba(255,255,255,0.06)",
-          }}
-        >
-          FULL STACK DEVELOPER • UI/UX DESIGNER • AI PRODUCT BUILDER
-        </span>
+      <div className="pointer-events-none absolute inset-0 top-[-24%] sm:top-[-2%] md:top-[0%] flex items-center overflow-hidden select-none">
+        <div className="flex w-max animate-marquee items-center gap-8 motion-reduce:animate-none">
+          {[
+            "FULL STACK DEVELOPER • UI/UX DESIGNER • AI PRODUCT BUILDER",
+            "FULL STACK DEVELOPER • UI/UX DESIGNER • AI PRODUCT BUILDER",
+          ].map((word, i) => (
+            <span
+              key={`${word}-${i}`}
+              className="font-display font-black uppercase leading-none tracking-tighter text-center px-4 shrink-0"
+              style={{
+                fontSize: "clamp(2rem, 10vw, 20rem)",
+                color: "transparent",
+                WebkitTextStroke: "2px rgba(255, 255, 255, 0.14)",
+              }}
+            >
+              {word}
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* portrait */}
       <div
         ref={containerRef}
-        className="absolute left-1/2 z-20 -translate-x-1/2 top-[6%] h-[60%] md:h-[80%] w-full max-w-[400px] md:max-w-[600px] pointer-events-none"
+        className="absolute left-1/2 z-20 -translate-x-1/2 top-[6%] h-[60%] md:h-[80%] w-full max-w-[400px] md:max-w-[600px] pointer-events-none hidden lg:block"
       >
         <img
           ref={imageRef1}
@@ -147,7 +155,7 @@ export function Hero() {
           className={`absolute left-1/2 -translate-x-1/2 h-full w-auto object-contain grayscale pointer-events-none transition-opacity duration-500 ${currentImage === 1 ? "opacity-100" : "opacity-0"}`}
           style={{
             maskImage:
-              "linear-gradient(to bottom, black 78%, transparent 100%)",
+              "linear-gradient(to bottom, black 85%, transparent 100%)",
           }}
         />
         <img
@@ -161,7 +169,7 @@ export function Hero() {
           className={`absolute left-1/2 -translate-x-1/2 h-full w-auto object-contain grayscale pointer-events-none transition-opacity duration-500 ${currentImage === 2 ? "opacity-100" : "opacity-0"}`}
           style={{
             maskImage:
-              "linear-gradient(to bottom, black 78%, transparent 100%)",
+              "linear-gradient(to bottom, black 85%, transparent 100%)",
           }}
         />
       </div>
@@ -181,67 +189,69 @@ export function Hero() {
         </h1>
       </div>
 
-      {/* left telemetry card */}
-      <div className="absolute left-4 md:left-8 bottom-[28%] md:bottom-[22%] z-10 w-[240px] md:w-[280px] glass rounded-xl p-3 md:p-4">
-        <div className="flex items-center justify-between mono-label">
-          <span>
-            Telemetry <span className="text-white/25">/</span>{" "}
-            <span className="text-primary">Active</span>
-          </span>
-          <span className="flex gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-            <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
-          </span>
-        </div>
-        <div className="mt-3 md:mt-4 flex items-center gap-2 text-base md:text-lg font-semibold">
-          <FiMapPin className="text-primary" />
-          {profile.location}
-        </div>
-        <div className="mt-1 flex items-center gap-2 text-xs md:text-sm text-white/60">
-          <FiClock /> {time || "--:-- --"} {profile.timezone}
-        </div>
-      </div>
-
-      {/* right tech specs card */}
-      <div className="absolute right-4 md:right-8 bottom-[28%] md:bottom-[22%] z-10 w-[240px] md:w-[300px] glass rounded-xl p-3 md:p-4">
-        <div className="flex items-center justify-between mono-label">
-          <span>
-            Tech Specs <span className="text-white/25">/</span> Load
-          </span>
-          <span className="text-primary">◆</span>
-        </div>
-        <div className="mt-4 space-y-3">
-          {skillBars.map((s) => (
-            <div key={s.name}>
-              <div className="flex justify-between text-xs font-semibold">
-                <span>{s.name}</span>
-                <span className="text-white/60">{s.value}%</span>
-              </div>
-              <div className="mt-1 h-[3px] w-full bg-white/10 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-primary"
-                  style={{ width: `${s.value}%` }}
-                />
-              </div>
+      <div className="relative z-10 mt-30 px-4 md:absolute md:inset-x-0 md:bottom-[22%] md:px-8">
+        <div className="mx-auto flex max-w-5xl flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          {/* left telemetry card */}
+          <div className="glass rounded-xl p-3 md:p-4 w-full max-w-[320px] md:w-[280px] md:absolute md:left-4 md:bottom-[28%] md:z-10 text-[0.92rem] md:text-base">
+            <div className="flex items-center justify-between mono-label">
+              <span>
+                Telemetry <span className="text-white/25">/</span>{" "}
+                <span className="text-primary">Active</span>
+              </span>
+              <span className="flex gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
+              </span>
             </div>
-          ))}
+            <div className="mt-3 md:mt-4 flex items-center gap-2 text-base md:text-lg font-semibold">
+              <FiMapPin className="text-primary" />
+              {profile.location}
+            </div>
+            <div className="mt-1 flex items-center gap-2 text-xs md:text-sm text-white/60">
+              <FiClock /> {time || "--:-- --"} {profile.timezone}
+            </div>
+          </div>
+
+          {/* right tech specs card */}
+          <div className="glass rounded-xl p-3 md:p-4 w-full max-w-[320px] md:w-[300px] md:absolute md:right-4 md:bottom-[28%] md:z-10 text-[0.92rem] md:text-base">
+            <div className="flex items-center justify-between mono-label">
+              <span>
+                Tech Specs <span className="text-white/25">/</span> Load
+              </span>
+              <span className="text-primary">◆</span>
+            </div>
+            <div className="mt-4 space-y-3">
+              {skillBars.map((s) => (
+                <div key={s.name}>
+                  <div className="flex justify-between text-xs font-semibold">
+                    <span>{s.name}</span>
+                    <span className="text-white/60">{s.value}%</span>
+                  </div>
+                  <div className="mt-1 h-[3px] w-full bg-white/10 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-primary"
+                      style={{ width: `${s.value}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
       {/* CTAs */}
-      <div className="absolute left-4 md:left-8 bottom-[16%] md:bottom-[10%] z-10">
+      <div className="relative z-10 mt-6 px-4 flex flex-col gap-3 md:absolute md:left-4 md:right-8 md:bottom-[10%] md:mt-0 md:px-0 md:flex-row md:items-center md:justify-between">
         <a
           ref={cta}
-          href="#projects"
-          className="inline-flex items-center gap-2 rounded-full bg-primary text-black px-4 md:px-6 py-2 md:py-3 text-xs md:text-sm font-bold"
+          href="#GetStarted"
+          className="inline-flex w-fit items-center gap-2 rounded-full bg-primary text-black px-4 md:px-6 py-2 md:py-3 text-xs md:text-sm font-bold"
         >
           START ENGINE <FiArrowUpRight />
         </a>
-      </div>
-      <div className="absolute right-4 md:right-8 bottom-[16%] md:bottom-[10%] z-10">
         <a
           href="#projects"
-          className="mono-label flex items-center gap-2 hover:text-primary text-xs md:text-sm"
+          className="mono-label flex w-fit items-center gap-2 hover:text-primary text-xs md:text-sm"
         >
           Project Gallery <FiArrowUpRight />
         </a>

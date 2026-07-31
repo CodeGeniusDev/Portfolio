@@ -66,7 +66,7 @@ export function Experience() {
   return (
     <section
       id="experience"
-      className="relative py-20 md:py-32 px-4 md:px-6 lg:px-12"
+      className="relative py-20 md:py-32 px-4 md:px-6 lg:px-12 bg-primary-foreground"
       aria-label="Experience"
     >
       <div className="max-w-6xl mx-auto">
@@ -87,7 +87,7 @@ export function Experience() {
             {experience.map((e) => (
               <div key={e.company} data-tl-card className="relative">
                 <span className="absolute -left-5 md:-left-8 lg:-left-15.5 top-2 w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-primary ring-4 ring-black" />
-                <div className="glass rounded-xl p-4 md:p-6 lg:p-8">
+                <div className="glass rounded-xl p-4 md:p-6 lg:p-8 bg-card">
                   <div className="flex justify-between mono-label mb-2 md:mb-3">
                     <span className="text-xs md:text-sm">{e.company}</span>
                     <span className="text-primary text-xs md:text-sm">

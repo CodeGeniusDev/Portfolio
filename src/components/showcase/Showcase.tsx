@@ -122,7 +122,7 @@ export function Showcase() {
   }, []);
 
   return (
-    <>
+    <div id="about">
       {/* Desktop / tablet pinned horizontal */}
       <section
         ref={sectionRef}
@@ -225,7 +225,7 @@ export function Showcase() {
 
       {/* Mobile stacked */}
       <ShowcaseMobile />
-    </>
+    </div>
   );
 }
 

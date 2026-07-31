@@ -5,10 +5,12 @@ import { useMagnetic } from "@/hooks/useMagneticEffect";
 
 const HEADLINE = ["LET'S", "BUILD", "TOGETHER"];
 const BG_WORDS = [
-  "FULL STACK",
-  "WEB DEVELOPER",
-  "UI/UX DESIGNER",
-  "AI BUILDER",
+  // "FULL STACK",
+  // "WEB DEVELOPER",
+  // "UI/UX DESIGNER",
+  // "AI BUILDER",
+  // "BUGS FEAR ME •",
+  "THINK. BUILD. SHIP. •",
 ];
 
 const COLORS = {
@@ -254,8 +256,8 @@ export function LetsBuild() {
           ease: "none",
           scrollTrigger: {
             trigger: section,
-            start: "top 85%",
-            end: "top 15%",
+            start: "top 80%",
+            end: "bottom 90%",
             scrub: true,
           },
         });
@@ -278,10 +280,10 @@ export function LetsBuild() {
 
   return (
     <section
-      id="build"
+      id="GetStarted"
       ref={sectionRef}
       aria-label="Let's build something amazing"
-      className="relative isolate overflow-hidden min-h-screen flex items-center justify-center px-6 md:px-12 py-3"
+      className="relative isolate overflow-hidden min-h-screen flex items-center justify-center px-6 md:px-12 py-3 bg-secondary-foreground"
       style={{ backgroundColor: COLORS.bg, color: COLORS.text }}
     >
       {/* grid pattern */}
@@ -316,7 +318,7 @@ export function LetsBuild() {
               style={{
                 fontSize: "clamp(3rem, 12vw, 9rem)",
                 color: "transparent",
-                WebkitTextStroke: "1px rgba(17,17,17,0.08)",
+                WebkitTextStroke: "2px rgba(17,17,17,0.08)",
               }}
             >
               {w}
@@ -406,9 +408,9 @@ export function LetsBuild() {
           <Button href="#contact" variant="primary">
             Contact Me <FiArrowUpRight />
           </Button>
-          <Button href="/resume.pdf" variant="outline" download>
+          {/* <Button href="/resume.pdf" variant="outline" download>
             Download Resume <FiDownload />
-          </Button>
+          </Button> */}
         </div>
       </div>
     </section>

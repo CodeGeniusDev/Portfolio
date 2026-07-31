@@ -147,6 +147,7 @@ export function Signature() {
   const line1Ref = useRef<SVGPathElement>(null);
   const line2Ref = useRef<SVGPathElement>(null);
   const sparkRef = useRef<HTMLDivElement>(null);
+  const sparkRef2 = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let active = true;
@@ -296,8 +297,8 @@ export function Signature() {
           ease: "none",
           scrollTrigger: {
             trigger: section,
-            start: `top ${85 - i * 5}%`,
-            end: `top ${25 - i * 5}%`,
+            start: "top 80%",
+            end: "bottom 90%",
             scrub: true,
           },
         });
@@ -314,7 +315,16 @@ export function Signature() {
         yoyo: true,
         repeat: -1,
       });
+      const sparkTween2 = gs.to(sparkRef2.current, {
+        y: -14,
+        rotate: 2,
+        duration: 4.5,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+      });
       tweens.push(sparkTween);
+      tweens.push(sparkTween2);
 
       const refreshOnResize = () => scrollTrigger.refresh();
       window.addEventListener("resize", refreshOnResize);
@@ -336,7 +346,16 @@ export function Signature() {
   }, []);
 
   return (
-    <main className="overflow-x-hidden bg-[var(--secondary-foreground)] px-3 py-4 sm:px-6 sm:py-6 lg:px-16 lg:py-16">
+    <main className="overflow-x-hidden bg-secondary-foreground px-3 py-4 sm:px-6 sm:py-6 lg:px-16 lg:py-16">
+      {/* grid pattern */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.4]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(17,17,17,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(17,17,17,0.06) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
+        }}
+      />
       <div className="mx-auto w-full max-w-[1800px]">
         <section
           id="contact"
@@ -345,6 +364,7 @@ export function Signature() {
           className="relative isolate overflow-hidden rounded-2xl sm:rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.97)] min-h-[100svh] flex flex-col justify-between px-4 py-6 sm:px-6 sm:py-8 md:px-10 md:py-10"
           style={{ backgroundColor: LIME, color: INK }}
         >
+
           <div
             className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 bg-white h-12 w-[75vw] max-w-[600px] min-w-[320px]"
             style={{
@@ -378,7 +398,14 @@ export function Signature() {
 
           <div
             ref={sparkRef}
-            className="pointer-events-none absolute right-[8%] bottom-[24%] hidden text-xl opacity-40 md:block md:right-[12%] md:text-2xl"
+            className="pointer-events-none absolute right-[8%] bottom-[44%] hidden text-xl opacity-40 md:block md:right-[12%] md:text-2xl"
+          >
+            ✦
+          </div>
+
+          <div
+            ref={sparkRef2}
+            className="pointer-events-none absolute left-[8%] top-[24%] hidden text-xl opacity-40 md:block md:right-[12%] md:text-2xl"
           >
             ✦
           </div>
@@ -397,6 +424,7 @@ export function Signature() {
 
               <MagneticLink
                 href="/resume.pdf"
+                download="Abdullah_Abbad_Resume.pdf"
                 className="inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-bold whitespace-nowrap sm:px-4 sm:py-2.5 sm:text-sm md:px-5 md:py-3"
                 style={{ background: INK, color: LIME }}
                 strength={0.25}

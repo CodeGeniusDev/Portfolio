@@ -12,7 +12,7 @@ export function About() {
   return (
     <section
       id="about"
-      className="relative py-20 md:py-32 px-4 md:px-6 lg:px-12"
+      className="relative py-20 md:py-32 px-4 md:px-6 lg:px-12 bg-card"
       aria-label="About"
     >
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 items-center">

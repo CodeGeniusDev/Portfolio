@@ -10,7 +10,7 @@ export function Skills() {
   return (
     <section
       id="skills"
-      className="relative py-20 md:py-32 px-4 md:px-6 lg:px-12"
+      className="relative py-20 md:py-32 px-4 md:px-6 lg:px-12 bg-card"
       aria-label="Skills"
     >
       <div className="max-w-7xl mx-auto">

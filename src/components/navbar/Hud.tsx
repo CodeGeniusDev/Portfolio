@@ -37,7 +37,7 @@ export function Hud() {
         {profile.role}
       </div>
       {/* bottom-left location */}
-      <div className="fixed bottom-20 left-4 md:bottom-4 md:left-6 z-40 mono-label flex items-center gap-2 text-[10px] md:text-xs">
+      <div className="fixed hidden bottom-20 left-4 md:bottom-4 md:left-6 z-40 mono-label md:flex items-center gap-2 text-[10px] md:text-xs">
         {/* <span className="w-1.5 h-1.5 rounded-full bg-primary" /> */}
         <span>{profile.location}</span>
         <span className="text-white/25">/</span>

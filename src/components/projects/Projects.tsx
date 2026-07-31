@@ -64,7 +64,7 @@ export function Projects() {
   return (
     <section
       id="projects"
-      className="relative py-20 md:py-32 px-4 md:px-6 lg:px-12"
+      className="relative py-20 md:py-32 px-4 md:px-6 lg:px-12 bg-card"
       aria-label="Projects"
     >
       <div className="max-w-7xl mx-auto">

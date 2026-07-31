@@ -45,7 +45,7 @@ function Counter({ v }: { v: number }) {
 export function Achievements() {
   return (
     <section
-      className="relative py-20 md:py-32 px-4 md:px-6 lg:px-12"
+      className="relative py-20 md:py-32 px-4 md:px-6 lg:px-12 bg-primary-foreground"
       aria-label="Achievements"
     >
       <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
