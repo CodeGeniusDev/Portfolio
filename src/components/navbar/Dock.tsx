@@ -1,126 +1,110 @@
-"use client"
+"use client";
+
 import {
   FiHome,
   FiUser,
   FiCode,
   FiAward,
   FiBriefcase,
-  FiPlay,
   FiMail,
-  FiZap,
   FiFileText,
   FiMoon,
+  FiPlay,
+  FiZap,
 } from "react-icons/fi";
 import { useMagnetic } from "@/hooks/useMagneticEffect";
-import { useRef, useState } from "react";
-import { gsap } from "gsap";
+import type { IconType } from "react-icons";
 
-const items = [
+type DockItem = {
+  icon: IconType;
+  label: string;
+  id: string;
+  href?: string;
+  download?: boolean;
+  external?: boolean;
+};
+
+const items: DockItem[] = [
   { id: "home", icon: FiHome, label: "Home" },
   { id: "about", icon: FiUser, label: "About" },
   { id: "experience", icon: FiBriefcase, label: "Experience" },
   { id: "skills", icon: FiCode, label: "Skills" },
   { id: "projects", icon: FiAward, label: "Projects" },
-  // { id: "youtube", icon: FiPlay, label: "YouTube" },
   { id: "contact", icon: FiMail, label: "Contact" },
+  { id: "resume", icon: FiFileText, label: "Resume", href: "/resume.pdf", download: true },
+  // { id: "youtube", icon: FiPlay, label: "YouTube" },
   // { id: "hub", icon: FiZap, label: "Hub" },
-  { id: "resume", icon: FiFileText, label: "Resume", href: "/resume.pdf", download: true, },
   // { id: "theme", icon: FiMoon, label: "Theme" },
 ];
 
 function DockButton({
-  Icon,
+  icon: Icon,
   label,
   id,
-}: {
-  Icon: typeof FiHome;
-  label: string;
-  id: string;
-}) {
+  href,
+  download,
+  external,
+}: DockItem) {
   const ref = useMagnetic<HTMLAnchorElement>(0.25);
-  const tooltipRef = useRef<HTMLSpanElement>(null);
 
-  const showTooltip = () => {
-    if (!tooltipRef.current) return;
-
-    gsap.fromTo(
-      tooltipRef.current,
-      {
-        opacity: 0,
-        y: 10,
-        scale: 0.8,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.25,
-        ease: "power3.out",
-      }
-    );
-  };
-
-  const hideTooltip = () => {
-    if (!tooltipRef.current) return;
-
-    gsap.to(tooltipRef.current, {
-      opacity: 0,
-      y: 10,
-      scale: 0.8,
-      duration: 0.2,
-      ease: "power3.in",
-    });
-  };
+  const isResume = id === "resume";
+  const linkHref = href ?? `#${id}`;
 
   return (
-    <div className="relative flex items-center justify-center">
+    <div className="group relative flex items-center justify-center overflow-visible">
       <span
-        ref={tooltipRef}
         className="
-        z-100
-  pointer-events-none
-  absolute
-  bottom-12
-  left-1/2
-  -translate-x-1/2
-  opacity-0
-  px-3
-  py-1.5
-  rounded-xl
-  whitespace-nowrap
-  text-xs
-  font-medium
-  backdrop-blur-xl
-  bg-white/80
-  text-black
-  border border-white/30
-  shadow-[0_8px_30px_rgba(0,0,0,0.15)]
-"
+          pointer-events-none
+          absolute
+          bottom-12
+          left-1/2
+          -translate-x-1/2
+          z-[9999]
+          whitespace-nowrap
+          rounded-xl
+          border border-white/30
+          bg-white/80
+          px-3
+          py-1.5
+          text-xs
+          font-medium
+          text-black
+          shadow-[0_8px_30px_rgba(0,0,0,0.15)]
+          backdrop-blur-xl
+          opacity-0
+          scale-90
+          translate-y-2
+          transition-all
+          duration-200
+          ease-out
+          group-hover:opacity-100
+          group-hover:scale-100
+          group-hover:translate-y-0
+          group-focus-within:opacity-100
+          group-focus-within:scale-100
+          group-focus-within:translate-y-0
+        "
       >
         {label}
       </span>
 
       <a
         ref={ref}
-        href={id === "resume" ? "/resume.pdf" : `#${id}`}
-        download={id === "resume"}
-        target={id === "resume" ? "_blank" : undefined}
-        rel={id === "resume" ? "noopener noreferrer" : undefined}
+        href={linkHref}
+        download={download}
+        target={external ? "_blank" : isResume ? "_blank" : undefined}
+        rel={external || isResume ? "noopener noreferrer" : undefined}
         aria-label={label}
-        onMouseEnter={showTooltip}
-        onMouseLeave={hideTooltip}
         className="
-    w-8 h-8 md:w-10 md:h-10
-    rounded-full
-    flex items-center justify-center
-    text-white/70
-    hover:text-black
-    hover:bg-primary
-    transition-colors
-    flex-shrink-0
-  "
+          flex h-8 w-8 flex-shrink-0 items-center justify-center
+          rounded-full
+          text-white/70
+          transition-colors
+          hover:bg-primary hover:text-black
+          md:h-10 md:w-10
+        "
       >
-        <Icon className="w-3.5 h-3.5 md:w-4 md:h-4" />
+        <Icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
       </a>
     </div>
   );
@@ -131,18 +115,22 @@ export function Dock() {
     <nav
       aria-label="Section navigation"
       className="
-    fixed bottom-4 md:bottom-6
-    left-1/2 -translate-x-1/2
-    z-40
-    glass rounded-full
-    px-2 md:px-3 py-1.5 md:py-2
-    flex items-center gap-0.5 md:gap-1
-    max-w-[90vw]
-    overflow-none
-  "
+        fixed bottom-4 left-1/2 z-40
+        flex max-w-[90vw] items-center gap-0.5 overflow-visible
+        rounded-full glass px-2 py-1.5
+        -translate-x-1/2 md:bottom-6 md:gap-1 md:px-3 md:py-2
+      "
     >
       {items.map((it) => (
-        <DockButton key={it.id} id={it.id} Icon={it.icon} label={it.label} />
+        <DockButton
+          key={it.id}
+          id={it.id}
+          icon={it.icon}
+          label={it.label}
+          href={it.href}
+          download={it.download}
+          external={it.external}
+        />
       ))}
     </nav>
   );
