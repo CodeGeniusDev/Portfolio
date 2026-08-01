@@ -450,7 +450,8 @@ export function Signature() {
                     WebkitTextStroke: `1px rgba(13,13,13,0.15)`,
                   }}
                 >
-                  {profile.role}
+                  {profile.line}
+                  {/* WEB DEVELOPER */}
                 </span>
               </div>
 
