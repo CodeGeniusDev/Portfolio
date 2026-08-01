@@ -451,7 +451,6 @@ export function Signature() {
                   }}
                 >
                   {profile.line}
-                  {/* WEB DEVELOPER */}
                 </span>
               </div>
 
