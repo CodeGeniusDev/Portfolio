@@ -71,7 +71,7 @@ export function Experience() {
     >
       <div className="max-w-6xl mx-auto">
         <p className="mono-label mb-4 md:mb-6">/ 02 &mdash; Experience</p>
-        <h2 className="font-display font-black leading-[0.95] tracking-tight text-4xl md:text-5xl lg:text-7xl mb-12 md:mb-16">
+        <h2 className="font-display text-5xl font-black italic uppercase leading-[0.95] tracking-tight md:text-7xl mb-12 md:mb-16">
           A <span className="text-primary">timeline</span> of work.
         </h2>
 

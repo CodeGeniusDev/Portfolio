@@ -288,7 +288,7 @@ export function LetsBuild() {
     >
       {/* grid pattern */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.4]"
+        className="pointer-events-none absolute inset-0 opacity-[0.1]"
         style={{
           backgroundImage:
             "linear-gradient(rgba(17,17,17,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(17,17,17,0.06) 1px, transparent 1px)",
@@ -372,11 +372,11 @@ export function LetsBuild() {
       {/* center content */}
       <div className="relative z-10 max-w-4xl mx-auto text-center">
         <p className="mono-label mb-6" style={{ color: "rgba(17,17,17,0.5)" }}>
-          / 06 &mdash; Let&rsquo;s Talk
+          / 05 &mdash; Let&rsquo;s Talk
         </p>
         <h2
           ref={headlineRef}
-          className="font-display font-black uppercase leading-[0.9] tracking-tighter mb-8"
+          className="font-display text-5xl font-black uppercase leading-[0.95] tracking-tight md:text-7xlmb-8"
           style={{ fontSize: "clamp(2.75rem, 9vw, 8rem)" }}
         >
           {HEADLINE.map((word, i) => (

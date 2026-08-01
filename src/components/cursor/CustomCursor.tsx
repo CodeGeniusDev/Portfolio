@@ -57,11 +57,11 @@ export function CustomCursor() {
     <>
       <div
         ref={dotRef}
-        className="pointer-events-none fixed top-0 left-0 z-[90] w-1.5 h-1.5 rounded-full bg-white -translate-x-1/2 -translate-y-1/2 hidden lg:block"
+        className="pointer-events-none fixed top-0 left-0 z-[9990] w-1.5 h-1.5 rounded-full bg-white -translate-x-1/2 -translate-y-1/2 hidden lg:block"
       />
       <div
         ref={ringRef}
-        className="pointer-events-none fixed top-0 left-0 z-[90] rounded-full border border-white/50 -translate-x-1/2 -translate-y-1/2 hidden lg:block transition-[width,height,background-color,border-color] duration-200"
+        className="pointer-events-none fixed top-0 left-0 z-[9990] rounded-full border border-white/50 -translate-x-1/2 -translate-y-1/2 hidden lg:block transition-[width,height,background-color,border-color] duration-200"
         style={{
           width: hover ? 56 : 28,
           height: hover ? 56 : 28,

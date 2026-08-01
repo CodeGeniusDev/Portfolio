@@ -552,7 +552,7 @@ function PanelWork() {
                   style={{ background: BORDER }}
                 />
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {p.tags.slice(0, 2).map((t) => (
+                  {p.technologies.slice(0, 2).map((t: string) => (
                     <span
                       key={t}
                       className="px-2 py-1 rounded-full border"

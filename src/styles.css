@@ -85,6 +85,21 @@
   }
 }
 
+/* Hide scrollbar for Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for Firefox */
+html {
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar for IE & old Edge */
+body {
+  -ms-overflow-style: none;
+}
+
 @utility glass {
   background: color-mix(in oklab, #0a0a0a 70%, transparent);
   backdrop-filter: blur(20px) saturate(140%);

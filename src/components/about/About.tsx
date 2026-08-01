@@ -34,7 +34,7 @@ export function About() {
           </p>
           <h2
             data-reveal
-            className="font-display font-black leading-[0.95] tracking-tight text-4xl md:text-5xl lg:text-7xl mb-6 md:mb-8"
+            className="font-display text-5xl font-black italic uppercase leading-[0.95] tracking-tight md:text-7xl mb-6 md:mb-8"
           >
             Engineer <span className="text-primary">building</span> quiet,
             precise interfaces.
