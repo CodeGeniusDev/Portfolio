@@ -5,9 +5,11 @@ import tailwindcss from "@tailwindcss/vite";
 import netlify from "@netlify/vite-plugin-tanstack-start";
 import { VitePWA } from "vite-plugin-pwa";
 import path from "path";
+import { nitro } from "nitro/vite";
 
 export default defineConfig({
   plugins: [
+    nitro(),
     tanstackStart(),
     react(),
     tailwindcss(),
